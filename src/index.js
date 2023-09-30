@@ -1,18 +1,50 @@
-//Module Imports
+//CONFIGURATION IMPORT
+const config = require("./config");
+
+//MODULE IMPORT
 const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const http = require("http");
+const { Server } = require("socket.io");
+const mongoose = require("mongoose");
 
-//Declarations + Initializations
+//INITIALIZATION
 const app = express();
-
-//ROUTES
-app.get('/', (request, response) => {
-	response.send('Hello World');
+const server = http.Server(app);
+const io = new Server(server, {
+	cors: {
+		origin: "*"
+	}
 });
 
-// App Setup
-app.listen(port, (err) => {
-	if (err){
-		console.log(err);
-	}
-	return console.log(`Server is listening on Port:${port}`);
+//ROUTE DEFINITIONS
+const roomAPIRoute = require("./api/rooms.js");
+const errorAPIRoute = require("./api/error.js");
+
+// SOCKET HANDLER DEFINITIONS
+// const registerRoomHandlers = require("./socket/roomHandler.js");
+
+//MIDDLEWARE
+app.use(cors());
+app.use(bodyParser.json());
+app.use("/room", roomAPIRoute);
+app.use(/[\s\S]*/, errorAPIRoute);
+
+//ESTABLISH DBCONNECTION
+// mongoose.connect(config.connectionString, 
+//     () => { console.log("DB CONNECTED"); }, 
+//     (e) => { console.log(e);}
+// );
+
+//SOCKET HANDLING
+io.on("connection", socket => {
+    console.log(`${socket.id} has connected`);
+
+    socket.on('disconnect', () => {});
+})
+
+//SERVER INIT
+server.listen(config.port, () => {
+    console.log(`@${Date(Date.now()).toString()}: Server is running on PORT:${config.port}`);
 });
