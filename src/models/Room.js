@@ -10,9 +10,14 @@ const roomSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    playerCount: {
+    playerMax: {
         type: Number,
         required: true,
+        max: 10
+    },
+    players : {
+        type: [String],
+        default: []
     }
 });
 
