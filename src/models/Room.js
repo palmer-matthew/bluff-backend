@@ -18,6 +18,15 @@ const roomSchema = new mongoose.Schema({
     players : {
         type: [String],
         default: []
+    },
+    createdDate: {
+        type: Date,
+        immutable: true,
+        default: () => Date.now()
+    },
+    updatedDate: {
+        type: Date,
+        default: () => Date.now()
     }
 });
 

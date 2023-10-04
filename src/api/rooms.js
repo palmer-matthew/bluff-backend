@@ -35,25 +35,24 @@ const generateRoomID = () => {
 const generateNewRoomID = () => {
     const tempRoomID  = generateRoomID();
 
-    while(!doesRoomExist(tempRoomID)){
+    while(!doesRoomExistWithID(tempRoomID)){
         tempRoomID = generateRoomID();
     }
 
     return tempRoomID;
 }
 
-const doesRoomExist = async (id) => {
-    const room  = await Room.findOne({ roomid: id });
-    return fieldExists(room)
+const doesRoomExistWithID = async (id) => {
+    const exists  = await Room.exists({ roomid: id });
+    return exists
 }
 
 const createNewRoomRecord = async (properties) => {
-    const room  = new Room(properties);
-    const transactionResult = await room.save(); 
+    const room  = await Room.create(properties);
 }
 
 
-router.route("/create").post(async (req , res) => {
+router.route("/create").post((req , res) => {
 
     const { name, player_count } = req.body;
 
@@ -66,7 +65,7 @@ router.route("/create").post(async (req , res) => {
 
         const roomID = generateNewRoomID();
 
-        createNewRoomRecord({ roomid: roomID, name: name, playerCount: player_count});
+        createNewRoomRecord({ roomid: roomID, name: name, playerMax: player_count});
 
         sendCustomResponse(res, 200, {
             message: "Room was created successfully",
