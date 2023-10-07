@@ -1,11 +1,14 @@
 class Game {
 
-    constructor(maxRounds){
-        this.players = [];
+    constructor(maxRounds, playersInRoom){
+        this.players = playersInRoom;
+        this.activePlayers = this.players.slice(0);
+        this.eliminatedPlayers = [];
         this.maxRounds = maxRounds;
         this.currentRound = 1;
         this.currentTurn = 1;
         this.currentPlayerTurn = 0;
+        this.gamePot = 0;
     }
 
     get players(){
@@ -47,6 +50,20 @@ class Game {
             return;
         }
         this.currentPlayerTurn = 0;
+    }
+
+    makePlayerFold(playerUsername){
+        this.activePlayers = this.activePlayers.filter((value) => value != playerUsername);
+        this.eliminatedPlayers.push(playerUsername);
+    }
+
+    hasPlayerFolded(playerUsername){
+        return this.eliminatedPlayers.includes(playerUsername);
+    }
+
+    resetPlayerStatusForNewRound(){
+        this.activePlayers = this.players.slice(0);
+        this.eliminatedPlayers = [];
     }
 
     run(){
