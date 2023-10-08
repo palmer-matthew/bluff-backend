@@ -53,7 +53,7 @@ class Game {
     }
 
     makePlayerFold(playerUsername){
-        this.activePlayers = this.activePlayers.filter((value) => value != playerUsername);
+        this.activePlayers = this.activePlayers.filter((value) => value.username != playerUsername);
         this.eliminatedPlayers.push(playerUsername);
     }
 
