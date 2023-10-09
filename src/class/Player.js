@@ -25,14 +25,24 @@ class Player {
         this.status = status;
     }
 
-    doesPlayerHaveSufficentFunds(amount){
+    makeFolded(){
+        this.status = 'Folded';
+    }
+
+    makeActive(){
+        this.status = 'Active';
+    }
+
+    hasSufficentFunds(amount){
         return this.balance >= amount;
     }
 
     makeBet(amount){
-        if(doesPlayerHaveSufficentFunds(amount)){
-            this.balance -= amount;
-        }
+        this.balance -= amount;
+    }
+
+    addWinnings(amount){
+        this.balance += amount;
     }
 
     isFolded(){

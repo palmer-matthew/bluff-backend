@@ -2,7 +2,7 @@ class Game {
 
     constructor(maxRounds, playersInRoom){
         this.players = playersInRoom;
-        this.activePlayers = this.players.slice(0);
+        this.activePlayers = this.players;
         this.eliminatedPlayers = [];
         this.maxRounds = maxRounds;
         this.currentRound = 1;
@@ -41,7 +41,7 @@ class Game {
 
     
     areThereMorePlayers(){
-        return this.currentPlayerTurn() < this.players.length;
+        return this.getCurrentPlayerTurn() < this.players.length;
     }
 
     changeToNextPlayerTurn(){
@@ -52,18 +52,36 @@ class Game {
         this.currentPlayerTurn = 0;
     }
 
-    makePlayerFold(playerUsername){
-        this.activePlayers = this.activePlayers.filter((value) => value.username != playerUsername);
-        this.eliminatedPlayers.push(playerUsername);
+    findActivePlayer(playerUsername){
+        return this.activePlayers.find((value) => value.username == playerUsername);
     }
 
-    hasPlayerFolded(playerUsername){
-        return this.eliminatedPlayers.includes(playerUsername);
+    makePlayerFold(playerUsername){
+        const player = this.findActivePlayer(playerUsername);
+        player.makeFolded();
     }
 
     resetPlayerStatusForNewRound(){
-        this.activePlayers = this.players.slice(0);
-        this.eliminatedPlayers = [];
+        for(var i = 0; i < this.activePlayers.length; i++){
+            this.activePlayers[i].makeActive();
+        }
+    }
+
+    isPlayerEligibleToBet(playerUsername, amount){
+        const player = this.findActivePlayer(playerUsername);
+        if(player.isFolded() || !player.hasSufficentFunds(amount)){
+            return false;
+        }
+        return true;
+    }
+
+
+    addPlayerBetToPot(playerUsername, betAmount){
+        const player = this.findActivePlayer(playerUsername);
+        if(this.isPlayerEligibleToBet(playerUsername, betAmount)){
+            player.makeBet(betAmount);
+            this.gamePot += betAmount;
+        }
     }
 
     run(){
