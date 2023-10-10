@@ -1,8 +1,11 @@
+require('./Deck.js');
+
 class Player {
     constructor(username){
         this.username = username;
         this.balance = 0;
         this.status = 'Active';
+        this.playerDeck = new Deck();
     }
 
     get username(){
@@ -51,6 +54,11 @@ class Player {
 
     isActive(){
         return this.status == 'Active';
+    }
+
+    pickActiveCards(hiddenCardValue, visibleCardValue){
+        this.deck.markCardfromHiddenDeckAsUsed(hiddenCardValue);
+        this.deck.markCardfromVisibleDeckAsUsed(visibleCardValue);
     }
 
 }
