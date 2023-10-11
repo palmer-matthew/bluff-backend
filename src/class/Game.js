@@ -84,6 +84,15 @@ class Game {
         }
     }
 
+    addWinningstoPlayerBalance(playerUsername, winningAmount){
+        const player = this.findActivePlayer(playerUsername);
+        player.addWinnings(winningAmount);
+    }
+
+    resetGamePot(){
+        this.gamePot = 0;
+    }
+
     run(){
         //
     }
