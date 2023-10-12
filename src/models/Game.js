@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const gameSchema = new mongoose.Schema({
-    roomid: {
+    gameID: {
         type: String,
         required: true,
         unique: true
@@ -10,6 +10,10 @@ const gameSchema = new mongoose.Schema({
         type: Date,
         immutable: true,
         default: () => Date.now()
+    },
+    players: {
+        type: [String],
+        required: true
     },
     updatedDate: {
         type: Date,
