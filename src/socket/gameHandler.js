@@ -12,6 +12,11 @@ const doesGameExistWithID = async (id) => {
     return exists
 }
 
+const returnAllPlayersInGameWithID = async (gameID) => {
+    const dbResult = await Game.findOne({ gameID });
+    return dbResult.players
+}
+
 module.exports = (io, socket) => {
 
     const createGame = (payload) => {
@@ -34,7 +39,24 @@ module.exports = (io, socket) => {
         }
     };
 
-    const startGame = () => {};
+    const startGame = (payload) => {
+
+        try{
+            
+            const players = returnAllPlayersInGameWithID(payload.gameID);
+
+            const firstPlayer = players[0];
+
+            io.in(payload.gameID).emit("game:current-player-turn", firstPlayer);
+
+        }catch(error){
+
+            // Error Logic
+
+        }
+
+        
+    };
 
     socket.on("game:create", createGame);
     socket.on("game:start", startGame);
