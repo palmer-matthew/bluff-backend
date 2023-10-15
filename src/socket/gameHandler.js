@@ -23,6 +23,17 @@ module.exports = (io, socket) => {
         }
     };
 
+    const setupGame = (payload) => {
+
+        // Things to do
+        // 1. retrieve all players in the Game
+        // 2. Initialize there balances and cards 
+        // 3. send an event that the game has been setup
+        // Possible join this ans start Game
+        //
+
+    };
+
     const startGame = (payload) => {
 
         try{
@@ -40,6 +51,19 @@ module.exports = (io, socket) => {
         }
 
         
+    };
+
+    const checkGameplay = (payload) => {
+
+        try{
+            
+            io.in(payload.gameID).emit("game:current-player-turn", firstPlayer);
+
+        }catch(error){
+
+            // Error Logic
+
+        }
     };
 
     socket.on("game:create", createGame);
