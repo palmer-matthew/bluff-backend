@@ -1,5 +1,6 @@
 const { returnAllPlayersInRoomWithID } = require('../utils/roomUtils.js');
-const { createNewGameRecord, doesGameExistWithID, returnAllPlayersInGameWithID } = require('../utils/gameUtils.js');
+const { createNewGameRecord, doesGameExistWithID, returnAllPlayersInGameWithID, initializePlayers } = require('../utils/gameUtils.js');
+
 
 module.exports = (io, socket) => {
 
@@ -16,21 +17,32 @@ module.exports = (io, socket) => {
                 gameID : roomID
             });
 
+            io.in(payload.roomID).emit("game:create-complete", true);
+
         }catch(error){
 
-            // Error Logic
+            io.in(payload.gameID).emit("game:create-complete", false);
 
         }
     };
 
     const setupGame = (payload) => {
 
-        // Things to do
-        // 1. retrieve all players in the Game
-        // 2. Initialize there balances and cards 
-        // 3. send an event that the game has been setup
-        // Possible join this ans start Game
-        //
+        try{
+
+            const players = returnAllPlayersInGameWithID(payload.gameID);
+
+            initializePlayers(players);
+
+            io.in(payload.gameID).emit("game:setup-complete", true);
+
+        }catch(error){
+
+            io.in(payload.gameID).emit("game:setup-complete", false);
+
+        }
+        
+        
 
     };
 
@@ -42,11 +54,13 @@ module.exports = (io, socket) => {
 
             const firstPlayer = players[0];
 
+            io.in(payload.gameID).emit("game:start-complete", true);
+
             io.in(payload.gameID).emit("game:current-player-turn", firstPlayer);
 
         }catch(error){
 
-            // Error Logic
+            io.in(payload.gameID).emit("game:start-complete", false);
 
         }
 
@@ -57,7 +71,7 @@ module.exports = (io, socket) => {
 
         try{
             
-            io.in(payload.gameID).emit("game:current-player-turn", firstPlayer);
+            // 
 
         }catch(error){
 
@@ -67,5 +81,6 @@ module.exports = (io, socket) => {
     };
 
     socket.on("game:create", createGame);
+    socket.on("game:setup", setupGame);
     socket.on("game:start", startGame);
 }
