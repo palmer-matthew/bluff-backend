@@ -67,11 +67,24 @@ module.exports = (io, socket) => {
         
     };
 
-    const checkGameplay = (payload) => {
+    const checkAction = (payload) => {
 
         try{
             
-            // 
+            const action = payload.action;
+
+            switch(action){
+                case 'bet':
+                break;
+                case 'call':
+                break;
+                case 'raise':
+                break;
+                case 'fold':
+                break;
+                default:
+                break;
+            }
 
         }catch(error){
 
@@ -83,4 +96,5 @@ module.exports = (io, socket) => {
     socket.on("game:create", createGame);
     socket.on("game:setup", setupGame);
     socket.on("game:start", startGame);
+    socket.on("game:make-action", checkAction);
 }
