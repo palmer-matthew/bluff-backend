@@ -23,7 +23,8 @@ const roomAPIRoute = require("./api/rooms.js");
 const errorAPIRoute = require("./api/error.js");
 
 // SOCKET HANDLER DEFINITIONS
-// const registerRoomHandlers = require("./socket/roomHandler.js");
+ const registerRoomHandlers = require("./socket/roomHandler.js");
+ const registerGameHandlers = require("./socket/gameHandler.js");
 
 //MIDDLEWARE
 app.use(cors());
@@ -41,7 +42,12 @@ app.use(/[\s\S]*/, errorAPIRoute);
 io.on("connection", socket => {
     console.log(`${socket.id} has connected`);
 
-    socket.on('disconnect', () => {});
+    registerRoomHandlers(io, socket);
+    registerGameHandlers(io, socket);
+
+    socket.on('disconnect', () => {
+        // 
+    });
 })
 
 //SERVER INIT
