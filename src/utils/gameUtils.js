@@ -30,7 +30,7 @@ const doesPlayerExistWithUsername = async (username) => {
 }
 
 const generateDeck = (start, end) => {
-    var deck = [];
+    var deck = []; 
 
     for(var i = start; i < end+1; i++){
         deck.push({

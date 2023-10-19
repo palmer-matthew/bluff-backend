@@ -32,11 +32,8 @@ app.use(bodyParser.json());
 app.use("/room", roomAPIRoute);
 app.use(/[\s\S]*/, errorAPIRoute);
 
-//ESTABLISH DBCONNECTION
-// mongoose.connect(config.connectionString, 
-//     () => { console.log("DB CONNECTED"); }, 
-//     (e) => { console.log(e);}
-// );
+// ESTABLISH DBCONNECTION
+mongoose.connect(config.connectionString);
 
 //SOCKET HANDLING
 io.on("connection", socket => {
