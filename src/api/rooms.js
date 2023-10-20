@@ -7,14 +7,14 @@ const fieldExists = (field) => {
 }
 
 const sendErrorResponse = (res, code , messageString) => {
-    res.send(code).json({
+    res.status(code).json({
         message: messageString,
         code : code
     });
 }
 
 const sendCustomResponse = (res, code , object) => {
-    res.send(code).json(object);
+    res.status(code).json(object);
 }
 
 const generateRoomID = () => {
@@ -43,12 +43,16 @@ const generateNewRoomID = () => {
 }
 
 const doesRoomExistWithID = async (id) => {
-    const exists  = await Room.exists({ roomid: id });
+    const exists  = await Room.exists({ roomID: id });
     return exists
 }
 
 const createNewRoomRecord = async (properties) => {
-    const room  = await Room.create(properties);
+    try{
+        const room  = await Room.create(properties);
+    }catch(error){
+        throw new Error('Failed to Create Room Record');
+    }
 }
 
 
@@ -65,11 +69,11 @@ router.route("/create").post((req , res) => {
 
         const roomID = generateNewRoomID();
 
-        createNewRoomRecord({ roomid: roomID, name: name, playerMax: player_count});
+        createNewRoomRecord({ roomID, name, playerMax: player_count});
 
         sendCustomResponse(res, 200, {
             message: "Room was created successfully",
-            roomID: roomID,
+            roomID,
             code: 200
         });
 

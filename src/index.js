@@ -33,7 +33,11 @@ app.use("/room", roomAPIRoute);
 app.use(/[\s\S]*/, errorAPIRoute);
 
 // ESTABLISH DBCONNECTION
-mongoose.connect(config.connectionString);
+mongoose.connect(config.connectionString).catch(error => console.log(error));
+
+mongoose.connection.on('error', error => {
+    console.log(error);
+})
 
 //SOCKET HANDLING
 io.on("connection", socket => {
@@ -43,7 +47,7 @@ io.on("connection", socket => {
     registerGameHandlers(io, socket);
 
     socket.on('disconnect', () => {
-        // 
+        console.log(`${socket.id} has disconnected`);
     });
 })
 
