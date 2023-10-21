@@ -80,6 +80,7 @@ router.route("/create").post((req , res) => {
         return;
     }catch(error){
 
+        // Error is not caught 
         sendErrorResponse(res, 500 , "Server Error Occured While Processing Transaction. Please Try Again Later");
         return;
     }
