@@ -60,6 +60,8 @@ router.route("/create").post((req , res) => {
 
     const { name, player_count } = req.body;
 
+    console.log(req.body);
+
     if(!(fieldExists(name) && fieldExists(player_count))){
         sendErrorResponse(res, 400, "One or More Necessary Arguments are missing from the Request");
         return;

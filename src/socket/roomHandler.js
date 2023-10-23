@@ -10,7 +10,7 @@ module.exports = (io, socket) => {
 
             addPlayerToRoomRecord(payload.roomID, payload.username);
 
-            playersInRoom = returnAllPlayersInRoomWithID(payload.roomID);
+            playersInRoom = await returnAllPlayersInRoomWithID(payload.roomID);
 
         }catch(error){
 
@@ -24,7 +24,7 @@ module.exports = (io, socket) => {
         console.log(`Player ${payload.username} joined Room ${payload.roomID}`);
     }
 
-    const leaveRoom = (payload) => {
+    const leaveRoom = async (payload) => {
         
         var playersInRoom;
         
@@ -32,7 +32,7 @@ module.exports = (io, socket) => {
 
             removePlayerFromRoomRecord(payload.roomID, payload.username);
 
-            playersInRoom = returnAllPlayersInRoomWithID(payload.roomID);
+            playersInRoom = await returnAllPlayersInRoomWithID(payload.roomID);
 
         }catch(error){
 
