@@ -1,12 +1,12 @@
 const { returnAllPlayersInRoomWithID } = require('../utils/roomUtils.js');
-const { createNewGameRecord, doesGameExistWithID, returnAllPlayersInGameWithID, initializePlayers } = require('../utils/gameUtils.js');
+const { createNewGameRecord, doesGameExistWithID, returnAllPlayersInGameWithID, initializePlayers, makePlayerBet } = require('../utils/gameUtils.js');
 
 
 module.exports = (io, socket) => {
 
-    const createGame = (payload) => {
+    const createGame = async (payload) => {
         try{
-            const players = returnAllPlayersInRoomWithID(payload.roomID);
+            const players = await returnAllPlayersInRoomWithID(payload.roomID);
 
             if(doesGameExistWithID(payload.roomID)){
                 return;
@@ -26,11 +26,11 @@ module.exports = (io, socket) => {
         }
     };
 
-    const setupGame = (payload) => {
+    const setupGame = async (payload) => {
 
         try{
 
-            const players = returnAllPlayersInGameWithID(payload.gameID);
+            const players = await returnAllPlayersInGameWithID(payload.gameID);
 
             initializePlayers(players);
 
@@ -46,11 +46,11 @@ module.exports = (io, socket) => {
 
     };
 
-    const startGame = (payload) => {
+    const startGame = async (payload) => {
 
         try{
             
-            const players = returnAllPlayersInGameWithID(payload.gameID);
+            const players = await returnAllPlayersInGameWithID(payload.gameID);
 
             const firstPlayer = players[0];
 
@@ -67,14 +67,16 @@ module.exports = (io, socket) => {
         
     };
 
-    const checkAction = (payload) => {
+    const checkGameAction = (payload) => {
 
         try{
             
-            const action = payload.action;
+            const { action, username, gameID } = payload;
 
             switch(action){
                 case 'bet':
+                    const { betAmount } = payload;
+                    makePlayerBet(username, betAmount);
                 break;
                 case 'call':
                 break;
@@ -88,7 +90,7 @@ module.exports = (io, socket) => {
 
         }catch(error){
 
-            // Error Logic
+           io.in(payload.gameID).emit("game:make-player-action-complete", false);
 
         }
     };
@@ -96,5 +98,5 @@ module.exports = (io, socket) => {
     socket.on("game:create", createGame);
     socket.on("game:setup", setupGame);
     socket.on("game:start", startGame);
-    socket.on("game:make-action", checkAction);
+    socket.on("game:make-player-action", checkGameAction);
 }

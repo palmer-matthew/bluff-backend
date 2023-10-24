@@ -76,7 +76,24 @@ const deinitializePlayers = async (players) => {
     }
 };
 
+const makePlayerBet = async (username, betAmount) => {
+    const currentBalance = await getCurrentPlayerBalance(username);
+
+    if(currentBalance > betAmount){
+        updatePlayerBalance(username, currentBalance - betAmount);
+    }
+};
+
+const getCurrentPlayerBalance = async (username) => {
+    const dbResult = await Player.findOne({ username });
+    return dbResult.balance
+};
+
+const updatePlayerBalance = async (username, balance ) => {
+    const result = await Player.updateOne({ username }, { $set: { balance }});
+};
+
 module.exports = { 
     createNewGameRecord, doesGameExistWithID, returnAllPlayersInGameWithID,
-    doesPlayerExistWithUsername, initializePlayers, deinitializePlayers
+    doesPlayerExistWithUsername, initializePlayers, deinitializePlayers, makePlayerBet
 };
