@@ -1,5 +1,6 @@
 const { returnAllPlayersInRoomWithID } = require('../utils/roomUtils.js');
-const { createNewGameRecord, doesGameExistWithID, returnAllPlayersInGameWithID, initializePlayers, makePlayerBet } = require('../utils/gameUtils.js');
+const { createNewGameRecord, doesGameExistWithID, returnAllPlayersInGameWithID, 
+    initializePlayers, makePlayerBet, addPlayerBetToGamePot } = require('../utils/gameUtils.js');
 
 
 module.exports = (io, socket) => {
@@ -77,6 +78,7 @@ module.exports = (io, socket) => {
                 case 'bet':
                     const { betAmount } = payload;
                     makePlayerBet(username, betAmount);
+                    addPlayerBetToGamePot(gameID, betAmount);
                 break;
                 case 'call':
                 break;

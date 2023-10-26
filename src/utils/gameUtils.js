@@ -89,11 +89,31 @@ const getCurrentPlayerBalance = async (username) => {
     return dbResult.balance
 };
 
+const getGamePot = async (gameID) => {
+    const dbResult = await Game.findOne({ gameID });
+    return dbResult.gamePot
+};
+
 const updatePlayerBalance = async (username, balance ) => {
     const result = await Player.updateOne({ username }, { $set: { balance }});
 };
 
+const updateGamePotInGameWithID = async (gameID, balance) => {
+    const result = await Game.updateOne({ gameID }, { $set: { balance }});
+}
+
+const addPlayerBetToGamePot = async (gameID, betAmount) => {
+    const potBalance = await getGamePot(gameID);
+
+    await updateGamePotInGameWithID(gameID, potBalance + betAmount);
+}
+
+const resetGamePotInGameWithID = async (gameID) => {
+    await updateGamePotInGameWithID(gameID, 0);
+}
+
 module.exports = { 
     createNewGameRecord, doesGameExistWithID, returnAllPlayersInGameWithID,
-    doesPlayerExistWithUsername, initializePlayers, deinitializePlayers, makePlayerBet
+    doesPlayerExistWithUsername, initializePlayers, deinitializePlayers, makePlayerBet,
+    addPlayerBetToGamePot
 };

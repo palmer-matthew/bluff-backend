@@ -6,14 +6,17 @@ const gameSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    players: {
+        type: [String],
+        required: true
+    },
+    gamePot: {
+        type: Number,
+    },
     createdDate: {
         type: Date,
         immutable: true,
         default: () => Date.now()
-    },
-    players: {
-        type: [String],
-        required: true
     },
     updatedDate: {
         type: Date,
