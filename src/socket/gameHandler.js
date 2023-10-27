@@ -97,6 +97,8 @@ module.exports = (io, socket) => {
         }
     };
 
+    const checkRoundResults = (payload) => {};
+
     socket.on("game:create", createGame);
     socket.on("game:setup", setupGame);
     socket.on("game:start", startGame);
